@@ -2,8 +2,10 @@
   "expo": {
     "name": "pikkc",
     "slug": "pikkc",
+    "owner": "cytescale",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "pikc",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -17,16 +19,30 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.cytescale.pikkc",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.578312168895-b5d4k76nli08ogbu7dbdfhmjqf44uotm"
+        }
+      },
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "config": {
+        "googleSignIn": {
+            "certificateHash": "c3b106506f59fa36c375d17779eb130339a849e2"
+        }
+      },
+      "package": "com.cytescale.pikkc",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }
