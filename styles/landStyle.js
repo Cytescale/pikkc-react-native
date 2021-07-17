@@ -333,6 +333,7 @@ const styles = StyleSheet.create({
           borderColor:'#fff',
           borderWidth:1,
           borderRadius:7,
+          overflow:'visible',
           display:'flex',
           flexDirection:'row',
           padding:12,

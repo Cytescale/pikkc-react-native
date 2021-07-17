@@ -1,48 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
-import React,{useState,useEffect,useRef } from 'react';
-import { AsyncStorage,StyleSheet, Text,TextInput, View,Button,PixelRatio,TouchableOpacity,Image,Dimensions } from 'react-native';
-import AppLoading from 'expo-app-loading';
+import React,{useState,useEffect } from 'react';
+import { AsyncStorage, Text, View,TouchableOpacity,Image,Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
 import styles from '../../styles/landStyle';
 import {SafeAreaView,SafeAreaProvider,} from 'react-native-safe-area-context';
-//host.exp.exponent
-import { 
-     useFonts,
-     Quicksand_300Light,
-     Quicksand_400Regular,
-     Quicksand_500Medium,
-     Quicksand_600SemiBold,
-     Quicksand_700Bold 
-   }from '@expo-google-fonts/quicksand';
-
-import * as Google from 'expo-google-app-auth';
+import { useFonts,Quicksand_300Light,Quicksand_400Regular,Quicksand_500Medium,Quicksand_600SemiBold,Quicksand_700Bold }from '@expo-google-fonts/quicksand';
 import * as GoogleSignIn from 'expo-google-sign-in';
 
 
-let StorageKey = '@pikc:googleauthbearer';
-let UserStorageKey = '@pikc:googleauthuser';
-let RefreshTokenKey ='@pikc:googleauthrefresh';
+//Storage uniqe keys
+const StorageKey = '@pikc:googleauthbearer';
+const UserStorageKey = '@pikc:googleauthuser';
 
-   const windowWidth = Dimensions.get('window').width;
-   const windowHeight = Dimensions.get('window').height;
-   
-   const asp4Height =  (windowWidth* 4)/3;
-   
-   class Login extends React.Component {
+class Login extends React.Component {
       constructor(props){
         super(props);
-        this.state = {
-          user:null
-        }
+        this.state = {user:null}
         this.onPress = this.onPress.bind();
       }
       
       componentDidMount(){
           this.getCachedAuthAsync();
-         this.checkIfLoged();
-         this.initGoolge();
+          this.checkIfLoged();
+          this.initGoolge();
       }
 
+      //google Oauth configuraion and scopes
       async initGoolge(){
         console.log('Google init');
         await GoogleSignIn.initAsync({
@@ -51,6 +34,7 @@ let RefreshTokenKey ='@pikc:googleauthrefresh';
           'https://www.googleapis.com/auth/drive.file',
           'https://www.googleapis.com/auth/drive.appdata',
           'https://www.googleapis.com/auth/drive.file'],
+          clientId:'578312168895-2esimi4sqqerqf6ig92ejc82u1mlj1pd.apps.googleusercontent.com',
           webClientId:'578312168895-48bparsqacgtrmeu1u1fdqb63e4h3beu.apps.googleusercontent.com',
         });
         //await GoogleSignIn.signOutAsync();
@@ -70,15 +54,12 @@ let RefreshTokenKey ='@pikc:googleauthrefresh';
         }
       }
 
+      //set brearer token key in storage
       async cacheAuthAsync(bearer) {
         return await AsyncStorage.setItem(StorageKey, JSON.stringify(bearer));
       }
-  
-      async cacheAuthRefreshAsync(token) {
-        return await AsyncStorage.setItem(RefreshTokenKey, JSON.stringify(token));
-      }
-  
 
+      //get brearer token key in storage
       async getCachedAuthAsync() {
         let value = await AsyncStorage.getItem(StorageKey);
         let bearer = JSON.parse(value);
@@ -86,20 +67,21 @@ let RefreshTokenKey ='@pikc:googleauthrefresh';
         return bearer;
       }
   
+      //set user data in storage
       async cacheUserAsync(userData) {
         return await AsyncStorage.setItem(UserStorageKey, JSON.stringify(userData));
       }
   
+      //set user data in storage
       async getCachedUserAsync() {
         let value = await AsyncStorage.getItem(UserStorageKey);
         let userData = JSON.parse(value);
         console.log('getCachedUserAsync', userData);
         return userData;
       }
-  //
+      //init login process
       onPress = async() =>{
-         console.log("Press2");
-         
+         console.log("login process init");  
         try {
                     await GoogleSignIn.askForPlayServicesAsync();
                     const { type, user } = await GoogleSignIn.signInAsync();
@@ -107,31 +89,13 @@ let RefreshTokenKey ='@pikc:googleauthrefresh';
                           console.log("LoginScreen.js 17 | success");
                           console.log(user);
                           await this.cacheAuthAsync(user.auth.accessToken);
-                          //await this.cacheAuthRefreshAsync(refreshToken);
                           await this.cacheUserAsync(user);
+                          //if tokens are set
                           await this.getCachedAuthAsync();
                           await this.getCachedUserAsync();
                           this.props.navigation.reset({index: 0,routes: [{ name: 'land' }],});;
                           return true;
                     }
-                    //const { type,accessToken,refreshToken, user } = await Google.logInAsync({
-                    //   iosClientId:'578312168895-b5d4k76nli08ogbu7dbdfhmjqf44uotm.apps.googleusercontent.com',
-                    //   iosStandaloneAppClientId:'578312168895-b5d4k76nli08ogbu7dbdfhmjqf44uotm.apps.googleusercontent.com',
-                    //   androidClientId: `578312168895-hg7v853094vk0uuasfbv16k4nv4anemb.apps.googleusercontent.com`,
-                    //   androidStandaloneAppClientId:`578312168895-hg7v853094vk0uuasfbv16k4nv4anemb.apps.googleusercontent.com`,
-                    //   scopes: ['profile', 'email','https://www.googleapis.com/auth/drive'],
-                    // });
-                    // if (type === "success") {
-                    //   console.log("LoginScreen.js 17 | success");
-                    //   console.log(user);
-                    //   await this.cacheAuthAsync(accessToken);
-                    //   await this.cacheAuthRefreshAsync(refreshToken);
-                    //   await this.cacheUserAsync(user);
-                    //   await this.getCachedAuthAsync();
-                    //   await this.getCachedUserAsync();
-                    //   this.props.navigation.reset({index: 0,routes: [{ name: 'land' }],});;
-                    //   return true;
-                    // }
         } catch (error) {
           console.log("LoginScreen.js 19 | error with login", error);
           return false;
@@ -175,7 +139,7 @@ let RefreshTokenKey ='@pikc:googleauthrefresh';
       }
    }
 
-   
+   //Login class wrapper 
    const LoginAct = ({navigation} ) =>{
           let [fontsLoaded] = useFonts({
           Quicksand_700Bold,
@@ -184,7 +148,6 @@ let RefreshTokenKey ='@pikc:googleauthrefresh';
           Quicksand_500Medium,
           Quicksand_600SemiBold,
         })
-   
         const [hasPermission, setHasPermission] = useState(null);
         useEffect(() => {
           (async () => {

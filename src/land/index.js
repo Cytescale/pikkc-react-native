@@ -1,70 +1,53 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React,{useState,useEffect,useRef } from 'react';
-import { Alert,AsyncStorage,StyleSheet, Text,TextInput, View,Button,PixelRatio,TouchableOpacity,Image,Dimensions } from 'react-native';
+import { Alert,AsyncStorage, Text,TextInput,View,TouchableOpacity,Image,Dimensions } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { Camera } from 'expo-camera';
 import styles from '../../styles/landStyle';
 import { BottomSheet } from "react-native-elements";
-import {
-     createDrawerNavigator,
-     DrawerContentScrollView,
-     DrawerItemList,
-     DrawerItem,
-   } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
-
-import {
-     SafeAreaView,
-     SafeAreaProvider,
-     SafeAreaInsetsContext,
-     useSafeAreaInsets,
-     initialWindowMetrics,    
-   } from 'react-native-safe-area-context';
-
-import { 
-     useFonts,
-     Quicksand_300Light,
-     Quicksand_400Regular,
-     Quicksand_500Medium,
-     Quicksand_600SemiBold,
-     Quicksand_700Bold 
-   } from '@expo-google-fonts/quicksand'
+import {createDrawerNavigator,DrawerContentScrollView,} from '@react-navigation/drawer';
+import {SafeAreaView,SafeAreaProvider,} from 'react-native-safe-area-context';
+import { useFonts,Quicksand_300Light,Quicksand_400Regular,Quicksand_500Medium,Quicksand_600SemiBold,Quicksand_700Bold }from '@expo-google-fonts/quicksand';
 
 
 import * as MediaLibrary from 'expo-media-library';
 import * as AppAuth from 'expo-app-auth';
 import * as GoogleSignIn from 'expo-google-sign-in';
 
-const Authconfig = {
+   //google Oauth configuraion and scopes
+  const Authconfig = {
      issuer: 'https://accounts.google.com',
      clientId: '578312168895-hg7v853094vk0uuasfbv16k4nv4anemb.apps.googleusercontent.com',
-     scopes: ['profile', 'email','https://www.googleapis.com/auth/drive'],
+     scopes:['profile',
+     'email',
+     'https://www.googleapis.com/auth/drive.file',
+     'https://www.googleapis.com/auth/drive.appdata',
+     'https://www.googleapis.com/auth/drive.file'],
    };
 
-   
    const windowWidth = Dimensions.get('window').width;
    const windowHeight = Dimensions.get('window').height;
-   
    const asp4Height =  (windowWidth* 4)/3;
-
-
    const Drawer = createDrawerNavigator();
-  
-  
+
+   //Storage uniqe keys
    const StorageKey = '@pikc:googleauthbearer';
    const UserStorageKey = '@pikc:googleauthuser';
    const RefreshTokenKey ='@pikc:googleauthrefresh';
 
+//set brearer token
  async function  cacheAuthAsync(bearer) {
      return await AsyncStorage.setItem(StorageKey, JSON.stringify(bearer));
    }
-async function getCachedAuthRefreshAsync() {
+//get refresh token (not needed function)
+ async function getCachedAuthRefreshAsync() {
      let value = await AsyncStorage.getItem(RefreshTokenKey);
      let bearer = JSON.parse(value);
      console.log('getCachedAuthAsync', bearer);
      return bearer;
 }
+//get brearer token
  async function  getCachedAuthAsync() {
      let bearer = null;
      let value = await AsyncStorage.getItem(StorageKey);
@@ -74,15 +57,18 @@ async function getCachedAuthRefreshAsync() {
      console.log('getCachedAuthAsync', bearer);
    return bearer;
  }
+ //set user data
  async function  cacheUserAsync(userData) {
    return await AsyncStorage.setItem(UserStorageKey, JSON.stringify(userData));
  }
+ //get user data
  async  function  getCachedUserAsync() {
    let value = await AsyncStorage.getItem(UserStorageKey);
    let userData = JSON.parse(value);
    console.log('getCachedUserAsync', userData.email);
    return userData;
  }
+ //logout function
  async function logout(){
      let act = await getCachedAuthAsync();
      console.log(act);
@@ -92,6 +78,8 @@ async function getCachedAuthRefreshAsync() {
         await AsyncStorage.removeItem(UserStorageKey);
         await AsyncStorage.removeItem(StorageKey);
  }
+
+ //Drive folder list getter function
  async function getList(){
      let myHeaders = new Headers();
      let br  = await getCachedAuthAsync();
@@ -114,6 +102,7 @@ async function getCachedAuthRefreshAsync() {
      }
      return folderList;
 }
+//Drive folder creation function
 async function createFolder(name){
      console.log(name);
      let myHeaders = new Headers();
@@ -128,8 +117,6 @@ async function createFolder(name){
      return json;
 
 }
-
-
 async function getRefreshToken(){
      let br = await getCachedAuthRefreshAsync();
      console.log('\n refresh token: '+br);
@@ -147,6 +134,7 @@ async function getRefreshToken(){
      
 }
 
+//Upload image to drive with base64 data and parent folder id
 async function uploadImage(base64Data,folderdata){
      const boundary = '-------314159265358979323846';
      const delimiter = "\r\n--" + boundary + "\r\n";
@@ -198,7 +186,6 @@ async function uploadImage(base64Data,folderdata){
           const checkIfLoged = async () =>{
                let re = null;
                let br = await getCachedAuthAsync();
-               // if(br){re = await getRefreshToken();}
                if(br){
                     await GoogleSignIn.initAsync({
                          scopes:['profile',
@@ -260,6 +247,7 @@ async function uploadImage(base64Data,folderdata){
                                    backgroundColor:'red'
                               }}>
                               <Camera
+                              flashMode={flashBool?'on':'offa'}
                               ratio={'4:3'}
                                ref={camera}
                                style={styles.landCam} type={type} />                                 
