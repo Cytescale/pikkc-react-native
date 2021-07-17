@@ -155,6 +155,10 @@ class Login extends React.Component {
             setHasPermission(status === 'granted');
           })();
         }, []);
+     
+     if (!fontsLoaded) {
+       return null
+     }
         
         return(
             <Login navigation={navigation} />
