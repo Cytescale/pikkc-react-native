@@ -14,6 +14,7 @@ import { useFonts,Quicksand_300Light,Quicksand_400Regular,Quicksand_500Medium,Qu
 import * as MediaLibrary from 'expo-media-library';
 import * as AppAuth from 'expo-app-auth';
 import * as GoogleSignIn from 'expo-google-sign-in';
+import * as WebBrowser from 'expo-web-browser';
 
    //google Oauth configuraion and scopes
   const Authconfig = {
@@ -182,6 +183,9 @@ async function uploadImage(base64Data,folderdata){
      const [folderList ,setFolderList] = useState(null);
      const [selecFolderData,setselecFolderData]= useState(null);
      const [foldername,setfoldername] = useState(null);
+     
+     
+    
      useEffect(()=>{
           const checkIfLoged = async () =>{
                let re = null;
@@ -247,7 +251,7 @@ async function uploadImage(base64Data,folderdata){
                                    backgroundColor:'red'
                               }}>
                               <Camera
-                              flashMode={flashBool?'on':'offa'}
+                              flashMode={flashBool?'on':'off'}
                               ratio={'4:3'}
                                ref={camera}
                                style={styles.landCam} type={type} />                                 
@@ -494,6 +498,10 @@ const LandAct = ({navigation }) =>{
         const [hasPermission, setHasPermission] = useState(null);
         
         const [userData,setUserData] = useState(null);
+        
+        const _handleLinkPress = async (url) => {
+          let result = await WebBrowser.openBrowserAsync(url);
+        };
 
 
         useEffect(() => {
@@ -569,17 +577,17 @@ const LandAct = ({navigation }) =>{
                                    </View>
                                    <View style={styles.landDrawerBottomBody}>
                                              <View style={styles.landDrawerBottomButtCont}>
-                                                  <TouchableOpacity>
+                                                  <TouchableOpacity onPress={()=>{_handleLinkPress('https://www.linkedin.com/company/pikk')}} >
                                                   <Image style={styles.landDrawerBottomIco} source={require('../../assets/lnkin.png')}/>
                                                   </TouchableOpacity>
                                              </View>
                                              <View style={styles.landDrawerBottomButtCont}>
-                                                  <TouchableOpacity>
+                                                  <TouchableOpacity onPress={()=>{_handleLinkPress('https://instagram.com/pikk.co.in?igshid=1acxjy6ajc4s0')}}>
                                                   <Image style={styles.landDrawerBottomIco} source={require('../../assets/insta.png')}/>
                                                   </TouchableOpacity>
                                              </View>
                                              <View style={styles.landDrawerBottomButtCont}>
-                                                  <TouchableOpacity>
+                                                  <TouchableOpacity onPress={()=>{_handleLinkPress('mailto:pikkcompany@gmail.com')}}>
                                                   <Image style={styles.landDrawerBottomIco} source={require('../../assets/mess.png')}/>
                                                   </TouchableOpacity>
                                              </View>

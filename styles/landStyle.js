@@ -335,6 +335,7 @@ const styles = StyleSheet.create({
           borderRadius:7,
           overflow:'visible',
           display:'flex',
+          maxWidth:190,
           flexDirection:'row',
           padding:12,
           paddingLeft:19,
@@ -345,17 +346,23 @@ const styles = StyleSheet.create({
      loginLoginGogButtIco:{
           width:22,
           height:22,
-          marginRight:7
+          marginLeft:12
      },
      loginLoginGogButtLab:{
           color:'#fff',
+          width:'100%',
           fontFamily:'Quicksand_500Medium',
           fontSize:17,
+          marginTop:-3,
+          textAlign:'center',
+          overflow:'visible',
      },
      loginLoginOr:{
           color:'#fff',
           fontFamily:'Quicksand_700Bold',
           fontSize:22,
+          width:'100%',
+          textAlign:'center',
           margin:12,
      },
      loginLoginBottomCont:{
