@@ -4,9 +4,9 @@
     "slug": "pikkc",
     "owner": "cytescale",
     "version": "1.0.0",
-    "orientation": "portrait",
     "scheme": "pikc",
-    "icon": "./assets/icon.png",
+    "orientation": "portrait",
+    "icon": "./assets/logo.jpeg",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -38,7 +38,12 @@
         }
       },
       "package": "com.cytescale.pikkc",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions":[ "CAMERA", 
+                      "WRITE_EXTERNAL_STORAGE",
+                      "READ_EXTERNAL_STORAGE",
+                      "VIBRATE"
+                    ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
