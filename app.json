@@ -22,7 +22,7 @@
       "bundleIdentifier": "com.cytescale.pikkc",
       "config": {
         "googleSignIn": {
-          "reservedClientId": "com.googleusercontent.apps.578312168895-b5d4k76nli08ogbu7dbdfhmjqf44uotm"
+          "reservedClientId": "com.googleusercontent.apps.578312168895-2esimi4sqqerqf6ig92ejc82u1mlj1pd"
         }
       },
       "googleServicesFile": "./GoogleService-Info.plist"
