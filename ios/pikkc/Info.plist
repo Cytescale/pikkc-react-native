@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Quicksand_600SemiBold.ttf</string>
-		<string>Quicksand_700Bold.ttf</string>
-		<string>Quicksand_500Medium.ttf</string>
-		<string>Quicksand_300Light.ttf</string>
-		<string>Quicksand_400Regular.ttf</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -55,7 +47,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -79,6 +71,14 @@
 	<string>Allow $(PRODUCT_NAME) to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to access your photos</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Quicksand_600SemiBold.ttf</string>
+		<string>Quicksand_700Bold.ttf</string>
+		<string>Quicksand_500Medium.ttf</string>
+		<string>Quicksand_300Light.ttf</string>
+		<string>Quicksand_400Regular.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
