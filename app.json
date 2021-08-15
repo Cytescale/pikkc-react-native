@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "pikkc",
+    "name": "Pikkc",
     "slug": "pikkc",
     "owner": "cytescale",
     "version": "1.0.0",
-    "scheme": "pikc",
+    "scheme": "com.cytescale.pikkc",
     "orientation": "portrait",
-    "icon": "./assets/logo.jpeg",
+    "icon": "./assets/pikkC.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -29,7 +29,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.jpeg",
+        "foregroundImage": "./assets/pikkC.png",
         "backgroundColor": "#FFFFFF"
       },
       "config": {

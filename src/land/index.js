@@ -1,31 +1,23 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React,{useState,useEffect,useRef } from 'react';
-import { Alert,AsyncStorage, Text,TextInput,View,TouchableOpacity,Image,Dimensions } from 'react-native';
+import { Alert,AsyncStorage, Switch,Text,TextInput,View,TouchableOpacity,Image,Dimensions,Platform,ToastAndroid  } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { Camera } from 'expo-camera';
 import styles from '../../styles/landStyle';
-import { BottomSheet } from "react-native-elements";
+import { BottomSheet ,CheckBox} from "react-native-elements";
 import {createDrawerNavigator,DrawerContentScrollView,} from '@react-navigation/drawer';
 import {SafeAreaView,SafeAreaProvider,} from 'react-native-safe-area-context';
 import { useFonts,Quicksand_300Light,Quicksand_400Regular,Quicksand_500Medium,Quicksand_600SemiBold,Quicksand_700Bold }from '@expo-google-fonts/quicksand';
 
 
 import * as MediaLibrary from 'expo-media-library';
-import * as AppAuth from 'expo-app-auth';
 import * as GoogleSignIn from 'expo-google-sign-in';
 import * as WebBrowser from 'expo-web-browser';
 
    //google Oauth configuraion and scopes
-  const Authconfig = {
-     issuer: 'https://accounts.google.com',
-     clientId: '578312168895-hg7v853094vk0uuasfbv16k4nv4anemb.apps.googleusercontent.com',
-     scopes:['profile',
-     'email',
-     'https://www.googleapis.com/auth/drive.file',
-     'https://www.googleapis.com/auth/drive.appdata',
-     'https://www.googleapis.com/auth/drive.file'],
-   };
+
+   var imageCompressionFlag = false;
 
    const windowWidth = Dimensions.get('window').width;
    const windowHeight = Dimensions.get('window').height;
@@ -36,6 +28,18 @@ import * as WebBrowser from 'expo-web-browser';
    const StorageKey = '@pikc:googleauthbearer';
    const UserStorageKey = '@pikc:googleauthuser';
    const RefreshTokenKey ='@pikc:googleauthrefresh';
+   const LoginTypeKey ='@pikc:LoginMethod';
+
+
+async function cacheLoginTypeAsync (bearer){return await AsyncStorage.setItem(LoginTypeKey, JSON.stringify(bearer));}
+
+
+async function getCachedLoginTypeAsync() {
+     let value = await AsyncStorage.getItem(LoginTypeKey);
+     let userData = JSON.parse(value);
+     console.log('getCachedLoginTypeAsync', userData);
+     return userData;
+}
 
 //set brearer token
  async function  cacheAuthAsync(bearer) {
@@ -79,8 +83,7 @@ import * as WebBrowser from 'expo-web-browser';
         await AsyncStorage.removeItem(UserStorageKey);
         await AsyncStorage.removeItem(StorageKey);
  }
-
- //Drive folder list getter function
+//Drive folder list getter function
  async function getList(){
      let myHeaders = new Headers();
      let br  = await getCachedAuthAsync();
@@ -91,7 +94,9 @@ import * as WebBrowser from 'expo-web-browser';
        headers: myHeaders,
        redirect: 'follow'
      };
-     let resp = await fetch("https://www.googleapis.com/drive/v2/files?key=AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk", requestOptions);
+     let resp = await fetch("https://www.googleapis.com/drive/v2/files?key=AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk", requestOptions).catch(e=>{
+          console.log('Get list error'+e);
+     });
      let json = await resp.json();
      let folderList = [];
      if(json){
@@ -122,15 +127,38 @@ async function getRefreshToken(){
      let br = await getCachedAuthRefreshAsync();
      console.log('\n refresh token: '+br);
      if(!br){return null;}
-     let re = await AppAuth.refreshAsync(Authconfig,br);
-     if(re){
-          await cacheAuthAsync(re.accessToken);
-          console.log('Auth token refreshed');
-          return re.accessToken;
+          var details = {
+               'client_id': '578312168895-9uu9tq9k9g7m3a10r3on0tf40q1d17ij.apps.googleusercontent.com',
+               'access_type': 'offline',
+               'grant_type': 'refresh_token',
+               'refresh_token':br
+          };
+          var formBody = [];
+          for (var property in details) {
+          var encodedKey = encodeURIComponent(property);
+          var encodedValue = encodeURIComponent(details[property]);
+          formBody.push(encodedKey + "=" + encodedValue);
+          }
+          formBody = formBody.join("&");
+          let requestAccOptions = {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
+          body: formBody,
+          redirect: 'follow'};
+          let resp = await fetch("https://oauth2.googleapis.com/token",requestAccOptions).catch(error => console.log('error', error));
+          let json = await resp.json();
+          console.log('Refresh token res '+json);
+     if(json){
+          if(json.access_token){
+               await cacheAuthAsync(json.access_token);
+               console.log('\n\nAuth token refreshed '+json.access_token);
+          }
+          else{
+               alert('Access token did not refresh');
+          }
      }
      else{
-          console.log('Auth token refresh failed');
-          return null;
+          alert('Access token did not refresh');
      }
      
 }
@@ -178,43 +206,55 @@ async function uploadImage(base64Data,folderdata){
      const [addFolderBool,setaddFolderBool] = useState(false);
      const [flashBool , setFlashBool] = useState(false);
      const [type, setType] = useState(Camera.Constants.Type.front);
-     const [ratioBool,setratioBool] = useState(true);
+     const [ratioBool,setratioBool] = useState(false);
      const [userData,setUserData] = useState(null);
      const [folderList ,setFolderList] = useState(null);
      const [selecFolderData,setselecFolderData]= useState(null);
      const [foldername,setfoldername] = useState(null);
-     
-     
-    
+     const [isLoggedIn,setisLoggedIn] = useState(false);
+
      useEffect(()=>{
           const checkIfLoged = async () =>{
-               let re = null;
-               let br = await getCachedAuthAsync();
-               if(br){
-                    await GoogleSignIn.initAsync({
-                         scopes:['profile',
-                         'email',
-                         'https://www.googleapis.com/auth/drive.file',
-                         'https://www.googleapis.com/auth/drive.appdata',
-                         'https://www.googleapis.com/auth/drive.file'],
-                         webClientId:'578312168895-48bparsqacgtrmeu1u1fdqb63e4h3beu.apps.googleusercontent.com',
-                    });
-                    let usrData  = await getCachedUserAsync()
-                    setUserData(usrData);
-                    console.log('\nlogged in');
-                    try{
-                         let fol = await getList();
-                         if(fol){
-                              console.log("Folder length"+fol.length);
-                              setFolderList(fol);
+               let fl = await getCachedLoginTypeAsync();
+               switch(fl){
+                    case 'GOOGLE_LOGIN_TYPE':{
+                         await setisLoggedIn(true);
+                         let br = await getCachedAuthAsync();
+                         if(br){
+                              let usrData  = await getCachedUserAsync()
+                              console.log('\n\n\n\nUSERDATA');
+                              console.log(usrData);
+                              setUserData(usrData);
+                              console.log('\nlogged in');
+                              try{
+                                   let fol = await getList();
+                                   if(fol){
+                                        console.log("Folder length"+fol.length);
+                                        setFolderList(fol);
+                                   }
+                              }catch(e){
+                                   console.error("Error Occr geting list"+e);
+                                   alert('Error occurred while getting data'+e.message)
+                              }
+          
                          }
-                    }catch(e){
-                         console.log("Error Occr geting list"+e);
-                         alert('Error occurred while getting data'+e.message)
+                         else{alert('Missing access key');}
+                         break;
                     }
-
+                    case 'GUEST_LOGIN_TYPE':{
+                         await setisLoggedIn(false);
+                         alert('Logged In as Guest');
+                         break;
+                    }
+                    case 'APPLE_LOGIN_TYPE':{
+                         await setisLoggedIn(true);
+                         break;
+                    }
+                    default:{
+                         alert('Unknown Login method');
+                         break;
+                    }
                }
-               else{alert('Not logged in');}
           }
           checkIfLoged();
      },[]);
@@ -246,18 +286,42 @@ async function uploadImage(base64Data,folderdata){
                               </View>
                               <View style={{
                                    width:'100%',
-                                   height:ratioBool?asp4Height:windowWidth,
+                                   // height:ratioBool?asp4Height:windowWidth,
+                                   height:asp4Height,
                                    marginTop:52,
-                                   backgroundColor:'red'
+                                   backgroundColor:'red',
+                                   overflow:'hidden',
+                                 
                               }}>
                               <Camera
                               flashMode={flashBool?'on':'off'}
+                              autoFocus="on"
                               ratio={'4:3'}
                                ref={camera}
-                               style={styles.landCam} type={type} />                                 
+                               style={{
+                                   width:'100%',
+                                   height:'100%',
+                                   top:!ratioBool?-((asp4Height-windowWidth)/2):0,
+                                   
+                               }}
+                                type={type} />                                 
                               </View>
-                              <View style={styles.landBottomBarMainCont}>
-                                   <View style={styles.landBotomFolderSelecButtCont}>
+                              <View style={
+                              {
+                                   flex:1,
+                                   height:'100%',
+                                   backgroundColor:'#2F436E',
+                                   paddingBottom:12,
+                                   marginTop:!ratioBool?-((asp4Height-windowWidth)):0,
+                              }}>
+                                   <View style={{
+                                          width:'100%',
+                                          height:42,
+                                          marginTop:7,
+                                          display:isLoggedIn?'flex':'none',
+                                          justifyContent:'center',
+                                          alignItems:'center',
+                                   }}>
                                         <TouchableOpacity 
                                         style={styles.landBotomFolderSelecButt}
                                         onPress={()=>{setfolderSelectBool(true)}}
@@ -286,21 +350,44 @@ async function uploadImage(base64Data,folderdata){
                                              <TouchableOpacity
                                              style={styles.lanndBottomClickButt}
                                              onPress={async ()=>{
-                                                  if (camera) {
+                                                  let r = await camera.current.getSupportedRatiosAsync();
+                                                  console.log(r);
+                                                  if (camera.current) {
                                                             try{
-                                                                 let {uri, width, height, exif, base64 } = await camera.current.takePictureAsync({quality:0.3,base64:true});
+                                                                 let {uri, width, height, exif, base64 } = await camera.current.takePictureAsync({skipProcessing:true,quality:imageCompressionFlag?0.2:0.8,base64:true});
                                                                  if(uri&&base64){
-                                                                      console.log('inn');
                                                                       if(selecFolderData){
                                                                            uploadImage(base64,selecFolderData).then((r)=>{
                                                                                 if(r){
                                                                                      console.log(r.id);
-                                                                                     alert('Image uploaded to drive'); 
+                                                                                     if(Platform.OS=='ios'){
+                                                                                          alert('Image uploaded to drive'); 
+                                                                                     }
+                                                                                     else{
+                                                                                          ToastAndroid.showWithGravityAndOffset(
+                                                                                               "Image uploaded to drive",
+                                                                                               ToastAndroid.SHORT,
+                                                                                               ToastAndroid.BOTTOM,
+                                                                                               0,50
+                                                                                             );
+                                                                                     }
+                                                                                     
+                                                                                     
                                                                                 }
                                                                            });
      
                                                                       }else{
-                                                                           alert('Select a folder');
+                                                                           if(Platform.OS=='ios'){
+                                                                                alert('Select a folder');
+                                                                           }
+                                                                           else{
+                                                                                ToastAndroid.showWithGravityAndOffset(
+                                                                                     "Select a folder",
+                                                                                     ToastAndroid.SHORT,
+                                                                                     ToastAndroid.BOTTOM,
+                                                                                     0,50
+                                                                                   );
+                                                                           }
                                                                       }
                                                                       
                                                                  }
@@ -331,7 +418,7 @@ async function uploadImage(base64Data,folderdata){
                                                   }
                                              }}
                                              >
-                                                  <Image  style={styles.lanndBottomClickButtIco} source={!userData?require('../../assets/PikkLeaf.png'):{uri:userData.photoURL}}/>
+                                                  <Image  style={styles.lanndBottomClickButtIco} source={!userData?require('../../assets/PikkLeaf.png'):{uri:userData.picture}}/>
                                              </TouchableOpacity>
                                         </View>
                                         <View style={styles.landBottomClickMainSubCont}>
@@ -359,6 +446,7 @@ async function uploadImage(base64Data,folderdata){
                                    }
                                    
                               </View>
+                                   {/*FOLDER LIST  */}
                               <BottomSheet
                               containerStyle={{ 
                               backgroundColor: 'rgba(0, 0,0,0.0)' }}
@@ -404,6 +492,9 @@ async function uploadImage(base64Data,folderdata){
                                                        selecFolderData?selecFolderData.id==e.id?setselecFolderData(null):setselecFolderData(e):setselecFolderData(e);
                                                        setfolderSelectBool(false);
                                                   }}>
+                                                  <View style={{position:'absolute',left:0,}}>
+                                                  <CheckBox disabled={true} checkedIcon='dot-circle-o' uncheckedIcon='circle-o' checked={selecFolderData?selecFolderData.id==e.id?true:false:false} />
+                                                  </View>
                                                   <Text style={styles.landFolderBottomSheetButtLab}>{e.title}</Text>                                        
                                                   </TouchableOpacity>
                                              )
@@ -414,6 +505,7 @@ async function uploadImage(base64Data,folderdata){
                                    </View>
                               </View>
                          </BottomSheet>
+                         
                               <BottomSheet
                               containerStyle={{ 
                                    
@@ -421,6 +513,7 @@ async function uploadImage(base64Data,folderdata){
                               }}
                               isVisible={addFolderBool}
                               >
+                              
                               <View style={styles.landFolderSelecBottomSheet}>
                                    <View style={styles.landFolderSelecBottomSheetTop}>
                                    <Text style={styles.landFolderSelecBottomSheetTopLab}>Add Folder</Text>     
@@ -434,7 +527,11 @@ async function uploadImage(base64Data,folderdata){
                                         marginTop:16,
                                         marginRight:16,
                                    }}>
-                                        <TouchableOpacity onPress={()=>{
+                                        <TouchableOpacity 
+                                        style={{
+                                             overflow:'visible'
+                                        }}
+                                        onPress={()=>{
                                              setaddFolderBool(false);
                                         }}>
                                         <Image style={styles.landFolderSelecBottomSheetTopClose} source={require('../../assets/round_highlight_off_white_24dp.png')}/>
@@ -496,35 +593,63 @@ const LandAct = ({navigation }) =>{
         });
 
         const [hasPermission, setHasPermission] = useState(null);
-        
+        const [imageCompression,setimageCompression] = useState(false);
         const [userData,setUserData] = useState(null);
+        const [isLoggedIn,setisLoggedIn] = useState(false);
+        imageCompressionFlag = imageCompression;
         
         const _handleLinkPress = async (url) => {
           let result = await WebBrowser.openBrowserAsync(url);
         };
 
-
+        const logoutInit = ()=>{
+          logout().then(async ()=>{
+               navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'login' }],
+                  });;  
+            });
+        }        
         useEffect(() => {
           (async () => {
             const { status } = await Camera.requestPermissionsAsync();
             setHasPermission(status === 'granted');
           })();
           const checkIfLoged = async () =>{
+               let fl = await getCachedLoginTypeAsync();
+               switch(fl){
+                    case 'GOOGLE_LOGIN_TYPE':{
+                         setisLoggedIn(true);
+                         break;
+                    }
+                    case 'GUEST_LOGIN_TYPE':{
+                         setisLoggedIn(false);
+                         break;
+                    }
+                    case 'APPLE_LOGIN_TYPE':{
+                         setisLoggedIn(true);
+                         break;
+                    }
+                    default:{
+                         break;
+                    }
+               }
                let br = await getCachedAuthAsync();
                if(br){
+                    await getRefreshToken();
                     let usrData  = await getCachedUserAsync()
                     setUserData(usrData);
                     console.log('\nlogged in');}
                else{alert('Not logged in');}
           }
           checkIfLoged();
-
           }, []);
       
         if (hasPermission === null) {
           return <View />;
         }
         if (hasPermission === false) {
+          logoutInit();
           return <Text>No access to camera</Text>;
         }
      
@@ -539,7 +664,14 @@ const LandAct = ({navigation }) =>{
                       <Drawer.Navigator      
                     drawerContent={props =>
                     <DrawerContentScrollView {...props} style={styles.landDrawerMainCont}>
-                         <View style={{height:windowHeight,paddingBottom:2,}}>
+                         <View style={{
+                              //  height:windowHeight-52,
+                              minHeight:windowHeight-72,
+                              maxHeight:windowHeight,
+                              overflow:'visible',
+                              height:'100%',          
+                              flexDirection:'column'
+                              }}>
                                    <View style={styles.landDrawerLogoCont}>
                                              <Text style={styles.landDrawerLogo}>pikkc</Text>
                                              <Text style={styles.landDrawerSubMoto}>Make your datasets with ease.</Text>
@@ -559,23 +691,33 @@ const LandAct = ({navigation }) =>{
                                                          },
                                                          { text: "Yes", onPress: async() => {
                                                               console.log('Loged out init');
-                                                              logout().then(async ()=>{
-                                                                 navigation.reset({
-                                                                      index: 0,
-                                                                      routes: [{ name: 'login' }],
-                                                                    });;  
-                                                              });
+                                                              logoutInit();
                                                          } }
                                                        ]
                                                      );
                                               }}
                                              >
                                                   <Text  style={{color:'#fff',fontFamily:'Quicksand_500Medium',fontSize:17}}>
-                                                       {!userData?'Not Connected':`${userData.firstName}'s Drive`}
+                                                       {!userData?'Not Connected':`${userData.given_name}'s Drive`}
                                                   </Text>
                                              </TouchableOpacity>
                                    </View>
                                    <View style={styles.landDrawerBottomBody}>
+                                             <View  style={styles.landDrawerBottomCompBody}>
+                                                  <Text style={styles.landDrawerBottomCompBodyLab} >Image Compression</Text>
+                                                  <Switch
+                                                       trackColor={{ false: "#767577", true: "#f4f3f4" }}
+                                                       thumbColor={imageCompression ? "#11E4D1" : "#f4f3f4"}
+                                                       ios_backgroundColor="#3e3e3e" 
+                                                       onValueChange={()=>{
+                                                            setimageCompression(!imageCompression);
+                                                            imageCompressionFlag = imageCompression;
+                                                       }}
+                                                       value={imageCompression}
+                                                       style={{position:'absolute',right:0}}
+                                                       />
+                                             </View>
+                                             <View  style={styles.landDrawerBottomSubBody}>
                                              <View style={styles.landDrawerBottomButtCont}>
                                                   <TouchableOpacity onPress={()=>{_handleLinkPress('https://www.linkedin.com/company/pikk')}} >
                                                   <Image style={styles.landDrawerBottomIco} source={require('../../assets/lnkin.png')}/>
@@ -591,12 +733,15 @@ const LandAct = ({navigation }) =>{
                                                   <Image style={styles.landDrawerBottomIco} source={require('../../assets/mess.png')}/>
                                                   </TouchableOpacity>
                                              </View>
+                                             </View>
+
+                                             
                                    </View>
                          </View>
                     </DrawerContentScrollView>}
                     overlayColor="transparent"
                     initialRouteName="Home">
-                    <Drawer.Screen name="Home" component={HomeScreen}  />
+                    <Drawer.Screen name="Home" component={HomeScreen}/>
                     </Drawer.Navigator>
                </SafeAreaProvider>
           )

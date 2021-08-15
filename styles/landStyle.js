@@ -7,6 +7,11 @@ const styles = StyleSheet.create({
      },
      landDrawerMainCont:{
           backgroundColor:'#2F436E',
+          flex:1,
+          flexDirection:'column',
+          height:'100%',
+          padding:0,
+          overflow:'visible',
      },   
      landDrawerMainInnerCont:{
 
@@ -52,9 +57,24 @@ const styles = StyleSheet.create({
      landDrawerBottomBody:{
           width:'100%',
           padding:22,
+        
+     },
+     landDrawerBottomCompBody:{
           display:'flex',
           flexDirection:'row',
-
+          
+          alignItems:'center',
+          height:82,
+          
+     },
+     landDrawerBottomCompBodyLab:{
+          color:'#fff',
+          fontSize:19,
+          fontFamily:'Quicksand_600SemiBold'
+     },
+     landDrawerBottomSubBody:{
+          display:'flex',
+          flexDirection:'row',
      },
      landDrawerBottomButtCont:{
           flex:1,
@@ -120,12 +140,15 @@ const styles = StyleSheet.create({
      landCam:{
           width:'100%',
           height:'100%',
+          flex: 1,
+          flexDirection: 'row',
      },
      landBottomBarMainCont:{
           flex:1,
           height:'100%',
           backgroundColor:'#2F436E',
           paddingBottom:12,
+
      },
      landBotomFolderSelecButtCont:{
           width:'100%',
@@ -134,6 +157,7 @@ const styles = StyleSheet.create({
           display:'flex',
           justifyContent:'center',
           alignItems:'center',
+          
      },
      landBotomFolderSelecButt:{
 
@@ -186,6 +210,9 @@ const styles = StyleSheet.create({
           justifyContent:'center',
           backgroundColor:'#fff',
           overflow:'hidden',
+          borderColor:'#fff',
+          borderWidth:3,
+          borderStyle:'solid',
      },
      lanndBottomClickButtIco:{
           width:62,
@@ -213,6 +240,7 @@ const styles = StyleSheet.create({
           justifyContent:'center',
           backgroundColor:'#2F436E',
           overflow:'hidden',
+          
      },
      landBottomCamButtIco:{
              width:42,
@@ -272,6 +300,7 @@ const styles = StyleSheet.create({
      landFolderSelecBottomSheetTopClose:{
           width:'100%',
           height:'100%',
+          overflow:'visible'
      },
      landFolderBottomSheetButt:{
           width:'100%',
@@ -335,8 +364,9 @@ const styles = StyleSheet.create({
           borderRadius:7,
           overflow:'visible',
           display:'flex',
-          maxWidth:190,
+          maxWidth:200,
           flexDirection:'row',
+          flexWrap:'nowrap',
           padding:12,
           paddingLeft:19,
           paddingRight:19,
@@ -353,6 +383,7 @@ const styles = StyleSheet.create({
           width:'100%',
           fontFamily:'Quicksand_500Medium',
           fontSize:17,
+          flexWrap:'nowrap',
           marginTop:-3,
           textAlign:'center',
           overflow:'visible',
