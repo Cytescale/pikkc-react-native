@@ -1,7 +1,7 @@
 
 import { StatusBar } from 'expo-status-bar';
 import React,{useState,useEffect,useRef } from 'react';
-import { Alert,AsyncStorage, Switch,Text,TextInput,View,TouchableOpacity,Image,Dimensions,Platform,ToastAndroid  } from 'react-native';
+import { Alert,AsyncStorage,Animated, Switch,Text,TextInput,View,TouchableOpacity,Image,Dimensions,Platform,ToastAndroid,Linking  } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { Camera } from 'expo-camera';
 import styles from '../../styles/landStyle';
@@ -9,6 +9,7 @@ import { BottomSheet ,CheckBox} from "react-native-elements";
 import {createDrawerNavigator,DrawerContentScrollView,} from '@react-navigation/drawer';
 import {SafeAreaView,SafeAreaProvider,} from 'react-native-safe-area-context';
 import { useFonts,Quicksand_300Light,Quicksand_400Regular,Quicksand_500Medium,Quicksand_600SemiBold,Quicksand_700Bold }from '@expo-google-fonts/quicksand';
+
 
 
 import * as MediaLibrary from 'expo-media-library';
@@ -94,14 +95,12 @@ async function getCachedLoginTypeAsync() {
        headers: myHeaders,
        redirect: 'follow'
      };
-     let resp = await fetch("https://www.googleapis.com/drive/v2/files?key=AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk", requestOptions).catch(e=>{
-          console.log('Get list error'+e);
-     });
+     let resp = await fetch("https://www.googleapis.com/drive/v2/files?key=AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk", requestOptions).catch(e=>{console.log('Get list error'+e);});
      let json = await resp.json();
      let folderList = [];
      if(json){
           for(let d in json.items){
-               if(json.items[d].mimeType=='application/vnd.google-apps.folder' && json.items[d].labels.trashed == false){
+               if(json.items[d].mimeType=='application/vnd.google-apps.folder' && json.items[d].labels.trashed == false && json.items[d].shared == false){
                     folderList.push(json.items[d]);
                }
           }
@@ -212,7 +211,18 @@ async function uploadImage(base64Data,folderdata){
      const [selecFolderData,setselecFolderData]= useState(null);
      const [foldername,setfoldername] = useState(null);
      const [isLoggedIn,setisLoggedIn] = useState(false);
-
+     const fadeAnim = useRef(new Animated.Value(0)).current;
+     
+     const fadeIn = () => {
+          console.log('anim init');     
+          Animated.timing(fadeAnim, {toValue: 1,duration: 400,useNativeDriver:false}).start(({ finished }) => {
+               Animated.timing(fadeAnim, {toValue: 0,duration: 400,useNativeDriver:false}).start(({ finished }) => {
+               
+               });
+             });
+     
+     };      
+      
      useEffect(()=>{
           const checkIfLoged = async () =>{
                let fl = await getCachedLoginTypeAsync();
@@ -258,7 +268,6 @@ async function uploadImage(base64Data,folderdata){
           }
           checkIfLoged();
      },[]);
-
      return (
           <SafeAreaView
           style={{backgroundColor:'#2F436E'}}
@@ -293,6 +302,23 @@ async function uploadImage(base64Data,folderdata){
                                    overflow:'hidden',
                                  
                               }}>
+                                   <Animated.View
+                                   pointerEvents="none"
+                                   style={{
+                                   position:'absolute',
+                                   zIndex:110,
+                                   top:0,
+                                   bottom:0,
+                                   left:0,
+                                   right:0,
+                                   display:'flex',
+                                   justifyContent:'center',
+                                   alignItems:'center',
+                                   backgroundColor:`rgba(255,255,255,1)`,
+                                   opacity:fadeAnim,
+                                   
+                              }}>
+                              </Animated.View>
                               <Camera
                               flashMode={flashBool?'on':'off'}
                               autoFocus="on"
@@ -301,10 +327,12 @@ async function uploadImage(base64Data,folderdata){
                                style={{
                                    width:'100%',
                                    height:'100%',
+                                   zIndex:100,
                                    top:!ratioBool?-((asp4Height-windowWidth)/2):0,
                                    
                                }}
-                                type={type} />                                 
+                                type={type} />       
+                                               
                               </View>
                               <View style={
                               {
@@ -353,6 +381,7 @@ async function uploadImage(base64Data,folderdata){
                                                   let r = await camera.current.getSupportedRatiosAsync();
                                                   console.log(r);
                                                   if (camera.current) {
+                                                       fadeIn();
                                                             try{
                                                                  let {uri, width, height, exif, base64 } = await camera.current.takePictureAsync({skipProcessing:true,quality:imageCompressionFlag?0.2:0.8,base64:true});
                                                                  if(uri&&base64){
@@ -729,7 +758,7 @@ const LandAct = ({navigation }) =>{
                                                   </TouchableOpacity>
                                              </View>
                                              <View style={styles.landDrawerBottomButtCont}>
-                                                  <TouchableOpacity onPress={()=>{_handleLinkPress('mailto:pikkcompany@gmail.com')}}>
+                                                  <TouchableOpacity onPress={()=>{Linking.openURL('mailto:pikkcompany@gmail.com')}}>
                                                   <Image style={styles.landDrawerBottomIco} source={require('../../assets/mess.png')}/>
                                                   </TouchableOpacity>
                                              </View>
