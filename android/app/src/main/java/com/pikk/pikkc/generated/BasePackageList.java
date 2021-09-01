@@ -1,4 +1,4 @@
-package com.cytescale.pikkc.generated;
+package com.pikk.pikkc.generated;
 
 import java.util.Arrays;
 import java.util.List;

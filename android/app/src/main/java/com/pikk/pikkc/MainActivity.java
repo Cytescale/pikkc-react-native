@@ -1,4 +1,4 @@
-package com.cytescale.pikkc;
+package com.pikk.pikkc;
 import android.content.res.Configuration;
 import android.content.Intent;
 

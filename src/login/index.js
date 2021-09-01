@@ -5,7 +5,6 @@ import { Camera } from 'expo-camera';
 import styles from '../../styles/landStyle';
 import {SafeAreaView,SafeAreaProvider,} from 'react-native-safe-area-context';
 import { useFonts,Quicksand_300Light,Quicksand_400Regular,Quicksand_500Medium,Quicksand_600SemiBold,Quicksand_700Bold }from '@expo-google-fonts/quicksand';
-import * as GoogleSignIn from 'expo-google-sign-in';
 import * as WebBrowser from 'expo-web-browser';
 import * as GoogleSession from 'expo-auth-session/providers/google';
 
@@ -161,10 +160,10 @@ class Login extends React.Component {
       const cacheUserAsync = async (userData)=>{return await AsyncStorage.setItem(UserStorageKey, JSON.stringify(userData));}
       const cacheAuthRefreshAsync = async (refreshToken)=>{return await AsyncStorage.setItem(RefreshTokenKey, JSON.stringify(refreshToken));}
       const [request, response, promptAsync] = GoogleSession.useAuthRequest({
-          expoClientId:'578312168895-dljgsvuub3t8rjl72feckaodf2e0tvd2.apps.googleusercontent.com',  
-          iosClientId: '578312168895-2esimi4sqqerqf6ig92ejc82u1mlj1pd.apps.googleusercontent.com',
-          androidClientId: '578312168895-9uu9tq9k9g7m3a10r3on0tf40q1d17ij.apps.googleusercontent.com',
-          webClientId: '578312168895-2ousc8d8ubp82clrkth98pbgakisg75e.apps.googleusercontent.com',
+        expoClientId:'926725315656-eeai1411q624nlu9k0a9g8drao8889mv.apps.googleusercontent.com',  
+        iosClientId: '926725315656-r0g7pdgu9br34c2kean6kq8m6377vgei.apps.googleusercontent.com',
+        androidClientId: '926725315656-hu04ncds9scisjcuu3f2tvgb847mkb37.apps.googleusercontent.com',
+        webClientId: '926725315656-lpdnsokfq49jtb7lf7jnghoa6fhl03g8.apps.googleusercontent.com',
 
           selectAccount:true,
           scopes:['profile',

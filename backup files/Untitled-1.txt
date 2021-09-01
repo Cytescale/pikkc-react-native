@@ -1,0 +1,118 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.cytescale.pikkc">
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme" android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true">
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://exp.host/@cytescale/pikkc" />
+    <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="42.0.0" />
+    <meta-data android:name="expo.modules.updates.EXPO_RELEASE_CHANNEL" android:value="default" />
+    <meta-data android:name="expo.modules.updates.ENABLED" android:value="true"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
+    <activity android:name=".MainActivity" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode" android:launchMode="singleTask" android:windowSoftInputMode="adjustResize" android:theme="@style/Theme.App.SplashScreen" android:screenOrientation="portrait">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="pikc"/>
+        <data android:scheme="com.cytescale.pikkc"/>
+      </intent-filter>
+    </activity>
+    <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>
+  </application>
+</manifest>
+
+
+{
+     "expo": {
+       "name": "Pikkc",
+       "slug": "pikkc",
+       "owner": "cytescale",
+       "version": "1.0.0",
+       "scheme": "com.cytescale.pikkc",
+       "orientation": "portrait",
+       "icon": "./assets/pikkC.png",
+       "splash": {
+         "image": "./assets/splash.png",
+         "resizeMode": "contain",
+         "backgroundColor": "#ffffff"
+       },
+       "updates": {
+         "fallbackToCacheTimeout": 0
+       },
+       "assetBundlePatterns": [
+         "**/*"
+       ],
+       "ios": {
+         "bundleIdentifier": "com.cytescale.pikkc",
+         "config": {
+           "googleSignIn": {
+             "reservedClientId": "com.googleusercontent.apps.578312168895-2esimi4sqqerqf6ig92ejc82u1mlj1pd"
+           }
+         },
+         "googleServicesFile": "./GoogleService-Info.plist"
+       },
+       "android": {
+         "adaptiveIcon": {
+           "foregroundImage": "./assets/pikkC.png",
+           "backgroundColor": "#FFFFFF"
+         },
+         "config": {
+           "googleSignIn": {
+               "certificateHash": "c3b106506f59fa36c375d17779eb130339a849e2"
+           }
+         },
+         "package": "com.cytescale.pikkc",
+         "googleServicesFile": "./google-services.json",
+         "permissions":[
+                         "CAMERA", 
+                         "WRITE_EXTERNAL_STORAGE",
+                         "READ_EXTERNAL_STORAGE",
+                         "VIBRATE"
+                       ]
+       },
+       "web": {
+         "favicon": "./assets/favicon.png"
+       },
+       "description": ""
+     }
+   }
+   
+
+
+   new
+   expoClientId:'926725315656-eeai1411q624nlu9k0a9g8drao8889mv.apps.googleusercontent.com',  
+   iosClientId: '926725315656-r0g7pdgu9br34c2kean6kq8m6377vgei.apps.googleusercontent.com',
+   androidClientId: '926725315656-hu04ncds9scisjcuu3f2tvgb847mkb37.apps.googleusercontent.com',
+   webClientId: '926725315656-lpdnsokfq49jtb7lf7jnghoa6fhl03g8.apps.googleusercontent.com',
+
+
+   old
+   expoClientId:'578312168895-dljgsvuub3t8rjl72feckaodf2e0tvd2.apps.googleusercontent.com',  
+   iosClientId: '578312168895-2esimi4sqqerqf6ig92ejc82u1mlj1pd.apps.googleusercontent.com',
+   androidClientId: '578312168895-9uu9tq9k9g7m3a10r3on0tf40q1d17ij.apps.googleusercontent.com',
+   webClientId: '578312168895-2ousc8d8ubp82clrkth98pbgakisg75e.apps.googleusercontent.com',
+
+
+   api key
+   AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk
+
+   expo go client id 
+   578312168895-dljgsvuub3t8rjl72feckaodf2e0tvd2.apps.googleusercontent.com
+
+   ios
+   578312168895-2esimi4sqqerqf6ig92ejc82u1mlj1pd.apps.googleusercontent.com
+
+   android 
+   578312168895-9uu9tq9k9g7m3a10r3on0tf40q1d17ij.apps.googleusercontent.com
+
+   web id
+   578312168895-2ousc8d8ubp82clrkth98pbgakisg75e.apps.googleusercontent.com

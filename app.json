@@ -2,15 +2,15 @@
   "expo": {
     "name": "Pikkc",
     "slug": "pikkc",
-    "owner": "cytescale",
+    "owner": "pikk",
     "version": "1.0.0",
-    "scheme": "com.cytescale.pikkc",
+    "scheme": "com.pikk.pikkc",
     "orientation": "portrait",
     "icon": "./assets/pikkC.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/pikkC.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#2F436E"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,27 +18,12 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "bundleIdentifier": "com.cytescale.pikkc",
-      "config": {
-        "googleSignIn": {
-          "reservedClientId": "com.googleusercontent.apps.578312168895-2esimi4sqqerqf6ig92ejc82u1mlj1pd"
-        }
-      },
-      "googleServicesFile": "./GoogleService-Info.plist"
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/pikkC.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#2F436E"
       },
-      "config": {
-        "googleSignIn": {
-            "certificateHash": "c3b106506f59fa36c375d17779eb130339a849e2"
-        }
-      },
-      "package": "com.cytescale.pikkc",
-      "googleServicesFile": "./google-services.json",
+      "package": "com.pikk.pikkc",
       "permissions":[
                       "CAMERA", 
                       "WRITE_EXTERNAL_STORAGE",

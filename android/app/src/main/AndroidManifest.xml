@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.cytescale.pikkc">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.pikk.pikkc">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
@@ -7,9 +7,8 @@
   <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.RECORD_AUDIO"/>
   <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="true" android:theme="@style/AppTheme" android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true">
-    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://exp.host/@cytescale/pikkc" />
-    <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="42.0.0" />
-    <meta-data android:name="expo.modules.updates.EXPO_RELEASE_CHANNEL" android:value="default" />
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://exp.host/@pikk/pikkc"/>
+    <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="42.0.0"/>
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="true"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS"/>
     <meta-data android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS" android:value="0"/>
@@ -22,8 +21,8 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="pikc"/>
-        <data android:scheme="com.cytescale.pikkc"/>
+        <data android:scheme="com.pikk.pikkc"/>
+        <data android:scheme="com.pikk.pikkc"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>

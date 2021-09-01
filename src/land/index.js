@@ -95,7 +95,7 @@ async function getCachedLoginTypeAsync() {
        headers: myHeaders,
        redirect: 'follow'
      };
-     let resp = await fetch("https://www.googleapis.com/drive/v2/files?key=AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk", requestOptions).catch(e=>{console.log('Get list error'+e);});
+     let resp = await fetch("https://www.googleapis.com/drive/v2/files?key=AIzaSyC6rL4NasRQSXSMSKekb7O_H0dwYpmd-bY", requestOptions).catch(e=>{console.log('Get list error'+e);});
      let json = await resp.json();
      let folderList = [];
      if(json){
@@ -127,7 +127,7 @@ async function getRefreshToken(){
      console.log('\n refresh token: '+br);
      if(!br){return null;}
           var details = {
-               'client_id': '578312168895-9uu9tq9k9g7m3a10r3on0tf40q1d17ij.apps.googleusercontent.com',
+               'client_id': '926725315656-hu04ncds9scisjcuu3f2tvgb847mkb37.apps.googleusercontent.com',
                'access_type': 'offline',
                'grant_type': 'refresh_token',
                'refresh_token':br
