@@ -49,6 +49,10 @@ export default function App() {
         <Stack.Screen options={{headerShown: false}}  name="land" component={LandAct} />
       </Stack.Navigator>
     </NavigationContainer>:
-    <View style={{backgroundColor:'#2F436E'}}></View>
+    <View style={{
+      flex:1,
+      height:'100%',
+      backgroundColor:'#2F436E'
+    }}></View>
   );
 }

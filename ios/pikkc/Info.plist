@@ -26,23 +26,12 @@
 				<key>CFBundleURLSchemes</key>
 				<array>
 					<string>pikc</string>
-					<string>com.cytescale.pikkc</string>
 				</array>
 			</dict>
 			<dict>
 				<key>CFBundleURLSchemes</key>
 				<array>
 					<string>com.googleusercontent.apps.578312168895-2esimi4sqqerqf6ig92ejc82u1mlj1pd</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLName</key>
-				<string>OAuthRedirect</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>com.cytescale.pikkc</string>
 				</array>
 			</dict>
 			<dict>
