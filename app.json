@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Pikkc",
+    "name": "pikkC",
     "slug": "pikkc",
     "owner": "cytescale",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "scheme": "pikc",
     "orientation": "portrait",
     "icon": "./assets/pikkC.png",
@@ -24,7 +24,7 @@
         "backgroundColor": "#2F436E"
       },
       "package": "com.pikk.pikkc",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions":[
                       "CAMERA", 
                       "WRITE_EXTERNAL_STORAGE",

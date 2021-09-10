@@ -104,6 +104,9 @@
 
    api key
    AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk
+   
+
+   new api key AIzaSyC6rL4NasRQSXSMSKekb7O_H0dwYpmd-bY
 
    expo go client id 
    578312168895-dljgsvuub3t8rjl72feckaodf2e0tvd2.apps.googleusercontent.com

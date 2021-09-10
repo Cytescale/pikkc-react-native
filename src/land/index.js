@@ -117,7 +117,7 @@ async function createFolder(name){
      myHeaders.append("Content-Type", "application/json");
      let raw = JSON.stringify({"title":name,"mimeType": "application/vnd.google-apps.folder"});
      let requestOptions = {method: 'POST',headers: myHeaders,body: raw,redirect: 'follow'};
-     let resp = await fetch("https://www.googleapis.com/drive/v2/files?key=AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk", requestOptions);
+     let resp = await fetch("https://www.googleapis.com/drive/v2/files?key=AIzaSyC6rL4NasRQSXSMSKekb7O_H0dwYpmd-bY", requestOptions);
      let json = await resp.json();
      return json;
 
@@ -191,9 +191,9 @@ async function uploadImage(base64Data,folderdata){
      myHeaders.append("Authorization", `Bearer ${br}`);
      myHeaders.append("Content-Type", 'multipart/mixed; boundary="' + boundary + '"');
      let requestOptions = {method: 'POST',params:{'uploadType': 'multipart'},headers: myHeaders,body:multipartRequestBody,redirect: 'follow'};
-     let resp = await fetch("https://www.googleapis.com/upload/drive/v2/files?key=AIzaSyCeMuCoxIBa77l1eurlBVd_OraUL3x0HTk", requestOptions);
+     let resp = await fetch("https://www.googleapis.com/upload/drive/v2/files?key=AIzaSyC6rL4NasRQSXSMSKekb7O_H0dwYpmd-bY", requestOptions);
      let json = await resp.json();
-     //console.log(json);
+     console.log(json);
      return json;
      
 }
